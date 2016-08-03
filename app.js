@@ -13,6 +13,11 @@ const App = React.createClass({
         elements.push(element);
         this.setState({elements});
     },
+    onRemove:function (index) {
+        const elements = this.state.elements;
+        elements.splice(index,1);
+        this.setState({elements});
+    },
 
     render: function(){
         const isEditor = this.state.isEditor
@@ -21,16 +26,15 @@ const App = React.createClass({
                 <button onClick={this.toggle}>{isEditor?'Preview':'Editor'}</button>
 
                 <div className={isEditor ? '' :'hidden'}>
-                    <Editor onAdd={this.onAdd}/>
+                    <Editor onAdd={this.onAdd} elements={this.state.elements} onRemove={this.onRemove}/>
                 </div>
                 <div className={isEditor ? 'hidden' :''}>
-                    <Preview/>
+                    <Preview elements={this.state.elements}/>
                 </div>
             </div>
         )
     }
 });
-
 
 const Editor = React.createClass({
 
@@ -38,7 +42,7 @@ const Editor = React.createClass({
         return (
             <div>
                 <div>
-                    <Left />
+                    <Left elements={this.props.elements} onRemove={this.props.onRemove}/>
                 </div>
                 <div>
                     <Right onAdd={this.props.onAdd}/>
@@ -50,9 +54,20 @@ const Editor = React.createClass({
 
 const Left = React.createClass({
 
+    remove:function (index) {
+      this.props.onRemove(index);
+    },
     render: function(){
+        const elements = this.props.elements.map((ele, index) => {
+            return <div key={index}>
+                <input type={ele}/>
+                <button onClick={this.remove.bind(this,index)}>X</button>
+            </div>
+        })
         return (
-            <div>Left</div>
+            <div>
+                {elements}
+            </div>
         )
     }
 });
@@ -78,8 +93,13 @@ const Right = React.createClass({
 const Preview = React.createClass({
 
     render: function(){
+        const elements = this.props.elements.map((ele,index) => {
+            return <div key={index}>
+                <input type={ele} />
+            </div>
+        })
         return (
-            <div>Preview</div>
+            <div>{elements}</div>
         )
     }
 });
