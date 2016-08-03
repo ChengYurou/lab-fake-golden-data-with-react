@@ -1,4 +1,5 @@
 const App = React.createClass({
+
     getInitialState:function () {
         return {
             isEditor:true,
@@ -10,24 +11,21 @@ const App = React.createClass({
     },
     add:function (element) {
         const elements = this.state.elements;
-        elements.push(element);
+        elements.push(element)
 
         this.setState({elements});
     },
-
-    remove:function (index) {
+    remove:function (i) {
         const elements = this.state.elements;
-        elements.splice(index,1);
+        elements.splice(i,1);
 
         this.setState({elements});
     },
-
-
     render: function(){
         var isEditor = this.state.isEditor;
         return (
             <div>
-                <button onClick={this.toogle}>{isEditor?'preview':'edit'}</button>
+                <button onClick={this.toogle}>{isEditor?'preview' : 'edit'}</button>
                 <div className={isEditor?'':'hidden'}>
                     <Editor onAdd={this.add} elements={this.state.elements} onRemove={this.remove}/>
                 </div>
@@ -36,7 +34,7 @@ const App = React.createClass({
                 </div>
             </div>
         )
-    }
+    }   
 });
 
 const Editor = React.createClass({
@@ -56,26 +54,27 @@ const Editor = React.createClass({
 });
 
 const Left = React.createClass({
-    remove:function (index) {
-        this.props.onRemove(index);
+
+    remove:function (i) {
+        console.log(i);
+        this.props.onRemove(i)
     },
-   
     render: function(){
-        const elements = this.props.elements.map((ele,index)=> {
-            return <div key={index}>
+        const elements = this.props.elements.map((ele,i) => {
+            return <div key={i}>
                 <input type={ele}/>
-                <button onClick={this.remove.bind(this,index)}>x</button>
+                <button onClick={this.remove.bind(this,i)}>x</button>
             </div>
         })
         return (
             <div>{elements}</div>
         )
-    }   
+    }
 });
 
 const Right = React.createClass({
    add:function () {
-       const element = $("input[name='element']:checked").val();
+      const element = $("input[name='element']:checked").val();
        this.props.onAdd(element)
    },
     render: function(){
@@ -86,14 +85,13 @@ const Right = React.createClass({
                 <button onClick={this.add}>+</button>
             </div>
         )
-    }   
+    }
 });
-
 const Preview = React.createClass({
    
     render: function(){
-        const elements = this.props.elements.map((ele,index)=> {
-            return <div key={index}>
+        const elements = this.props.elements.map((ele,i) => {
+            return <div key={i}>
                 <input type={ele}/>
             </div>
         })
